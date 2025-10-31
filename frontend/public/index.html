@@ -94,7 +94,7 @@
   <script>
     const sendBtn = document.getElementById('sendBtn');
     const messageInput = document.getElementById('messageInput');
-    const chatMessages = document.querySelector('.chat-Messages');
+    const chatMessages = document.querySelector('.chat-messages');
 
     // Create a connection to the backend WebSocket server
     const ws = new WebSocket("ws://localhost:3000");
@@ -109,7 +109,6 @@
       newMessage.className = 'message other';
       newMessage.textContent = text;
       chatMessages.appendChild(newMessage);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
     };
 
     ws.onclose = () => {
@@ -118,13 +117,13 @@
 
     sendBtn.addEventListener('click', () => {
       const text = messageInput.value.trim();
-      if (text) {
+      if (text && ws.readyState === WebSocket.OPEN) {
+        ws.send(text); //send to server
         const newMessage = document.createElement('div');
         newMessage.className = 'message user';
         newMessage.textContent = text;
         chatMessages.appendChild(newMessage);
         messageInput.value = '';
-        chatMessages.scrollTop = chatMessages.scrollHeight;
       }
     });
 
